@@ -6,8 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-burn      = { git = "https://github.com/burn-rs/burn.git", package = "burn"}
-burn-wgpu = { git = "https://github.com/burn-rs/burn.git", package = "burn-wgpu"}
-image     = "0.24.6"
-serde     = {version = "1.0.180", features = ["std", "derive"] }
-structopt = "0.3.26"
+burn         = { git = "https://github.com/burn-rs/burn.git", package = "burn"}
+burn-wgpu    = { git = "https://github.com/burn-rs/burn.git", package = "burn-wgpu"}
+
+image        = "0.24.6"
+serde        = {version = "1.0.180", features = ["std", "derive"] }
+structopt    = "0.3.26"

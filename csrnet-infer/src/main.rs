@@ -31,8 +31,8 @@ fn prepare_image<B: Backend>(path: &str) -> Tensor<B, 4> {
     // la normalisation n'est pas non plus utilisee dans le papier original
     // meme si elle est encore presente dans le code (mais pas utilisee).
     //
-    const MEAN_MAGIC: [f32;3] = [0.485, 0.456, 0.406];
-    const STD_MAGIC:  [f32;3] = [0.229, 0.224, 0.225];
+    //const MEAN_MAGIC: [f32;3] = [0.485, 0.456, 0.406];
+    //const STD_MAGIC:  [f32;3] = [0.229, 0.224, 0.225];
     const SUB_MAGIC:  [f32;3] = [92.8207477031, 95.2757037428, 104.877445883];
     for c in 0..3 {
         for y in 0..h  {
@@ -64,7 +64,7 @@ fn main() {
     let model = csrnet::Model::<CCBackend>::default();
     let tensor = prepare_image::<CCBackend>(&args.image);
 
-    let output: Tensor<WgpuBackend<AutoGraphicsApi, f32, i32>, 4> = model.forward(tensor);
+    let output = model.forward(tensor);
     let output = output.sum().into_scalar();
     println!("{output:?}");
 }

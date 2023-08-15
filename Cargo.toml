@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    'csrnet-import',
+    'csrnet-infer',
+    # 'csrnet-finetune'
+]

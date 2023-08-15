@@ -19,7 +19,13 @@ struct Args {
 fn prepare_image<B: Backend>(path: &str) -> Tensor<B, 4> {
     let im = image::open(path).expect("open image");
     let (w, h) = im.dimensions();
-    let im = im.resize(9 * w / 10, 9 * h / 10, FilterType::Nearest);
+
+    const TARGET: f32 = 640.0;
+    let x = w.max(h) as f32;
+    let ratio = TARGET / x;
+    let w = (w as f32 * ratio).round() as u32;
+    let h = (h as f32 * ratio).round() as u32;
+    let im = im.resize(w, h, FilterType::CatmullRom);
     let (w, h) = im.dimensions();
 
     let im = im.to_rgb8();

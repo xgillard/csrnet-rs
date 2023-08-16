@@ -878,15 +878,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "csrnet-import"
-version = "0.1.0"
-dependencies = [
- "burn-import",
- "structopt",
-]
-
-[[package]]
-name = "csrnet-infer"
+name = "csrnet"
 version = "0.1.0"
 dependencies = [
  "burn 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
@@ -895,6 +887,14 @@ dependencies = [
  "burn-wgpu",
  "image",
  "serde",
+ "structopt",
+]
+
+[[package]]
+name = "csrnet-import"
+version = "0.1.0"
+dependencies = [
+ "burn-import",
  "structopt",
 ]
 

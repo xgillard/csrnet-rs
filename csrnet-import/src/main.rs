@@ -8,7 +8,7 @@ struct Args {
     #[structopt(short, long, default_value="./resources/csrnet.onnx")]
     input: String,
     /// The path where to output everything
-    #[structopt(short, long, default_value="./csrnet-infer/src/model")]
+    #[structopt(short, long, default_value="./csrnet/src/model")]
     out_dir: String,
 }
 

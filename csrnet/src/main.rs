@@ -18,12 +18,16 @@ type CCBackend = WgpuBackend<AutoGraphicsApi, f32, i32>;
 #[cfg(feature = "tch")]
 type CCBackend = TchBackend<f32>;
 
-/// Returns the number of people that have been counted in an image
+/// The model to perform crowdcounting -- count the number of persons in the
+/// picture of a crowd.
 #[derive(Debug, structopt::StructOpt)]
-struct Args {
-    /// The image whose number of people should be counted.
-    #[structopt(short, long)]
-    image: String
+enum Args {
+    /// Uses the trained model to perform inference (that is: actually count people in an image)
+    Infer {
+        /// The image whose number of people should be counted.
+        #[structopt(short, long)]
+        image: String
+    },
 }
 
 fn prepare_image<B: Backend>(path: &str) -> Tensor<B, 4> {
@@ -69,10 +73,14 @@ fn prepare_image<B: Backend>(path: &str) -> Tensor<B, 4> {
 
 fn main() {
     let args = Args::from_args();
-    let model = csrnet::Model::<CCBackend>::default();
-    let tensor = prepare_image::<CCBackend>(&args.image);
+    match &args {
+        Args::Infer { image } => {
+            let model = csrnet::Model::<CCBackend>::default();
+            let tensor = prepare_image::<CCBackend>(image);
 
-    let output = model.forward(tensor);
-    let output = output.sum().into_scalar();
-    println!("{output:?}");
+            let output = model.forward(tensor);
+            let output = output.sum().into_scalar();
+            println!("{output:?}");
+        }
+    }
 }

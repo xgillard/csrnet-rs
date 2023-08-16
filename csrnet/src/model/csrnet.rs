@@ -40,7 +40,7 @@ impl<B: Backend> Default for Model<B> {
     fn default() -> Self {
         let record =
             burn::record::DefaultFileRecorder::<burn::record::FullPrecisionSettings>::new()
-                .load("./csrnet-infer/src/model/csrnet".into())
+                .load("./csrnet/src/model/csrnet".into())
                 .expect("Record file to exist.");
         Self::new_with(record)
     }

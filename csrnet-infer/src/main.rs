@@ -1,12 +1,22 @@
 use burn::tensor::{Tensor, Shape, backend::Backend, Data};
+#[cfg(feature = "cpu")]
+use burn_ndarray::NdArrayBackend;
+#[cfg(feature = "tch")]
+use burn_tch::TchBackend;
+#[cfg(feature = "wgpu")]
 use burn_wgpu::{WgpuBackend, AutoGraphicsApi};
 
 pub mod model;
-use image::{GenericImageView, imageops::FilterType};
+use image::GenericImageView;
 use model::csrnet;
 use structopt::StructOpt;
 
+#[cfg(feature = "cpu")]
+type CCBackend = NdArrayBackend<f32>;
+#[cfg(feature = "wgpu")]
 type CCBackend = WgpuBackend<AutoGraphicsApi, f32, i32>;
+#[cfg(feature = "tch")]
+type CCBackend = TchBackend<f32>;
 
 /// Returns the number of people that have been counted in an image
 #[derive(Debug, structopt::StructOpt)]
@@ -18,14 +28,6 @@ struct Args {
 
 fn prepare_image<B: Backend>(path: &str) -> Tensor<B, 4> {
     let im = image::open(path).expect("open image");
-    let (w, h) = im.dimensions();
-
-    const TARGET: f32 = 640.0;
-    let x = w.max(h) as f32;
-    let ratio = TARGET / x;
-    let w = (w as f32 * ratio).round() as u32;
-    let h = (h as f32 * ratio).round() as u32;
-    let im = im.resize(w, h, FilterType::CatmullRom);
     let (w, h) = im.dimensions();
 
     let im = im.to_rgb8();

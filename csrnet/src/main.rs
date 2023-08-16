@@ -48,7 +48,12 @@ enum Args {
     },
     /// Work in progress
     Train {
-        path: String
+        /// Path to the training dataset
+        #[structopt(short, long)]
+        train: String,
+        /// The model to use
+        #[structopt(short, long)]
+        model: Option<String>,
     },
 }
 
@@ -63,14 +68,14 @@ fn main() {
             let output = output.sum().into_scalar();
             println!("{output:?}");
         },
-        Args::Train { path } => {
+        Args::Train { train, model } => {
             let config = CsrnetTrainingConfig {
-                model_file : None, 
+                model_file : model.clone(), 
                 checkpoints: "./artifacts/checkpoints/".to_string(), 
                 output:  "./outputs/".to_string(), 
                 
-                train: path.clone(),
-                validation: path.clone(),
+                train: train.clone(),
+                validation: train.clone(),
 
                 batch_size: 1,
                 num_epochs: 10,

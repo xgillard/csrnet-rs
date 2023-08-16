@@ -1,4 +1,4 @@
-use burn::{config::Config, tensor::{backend::{ADBackend, Backend}, Tensor}, optim::{AdamConfig, decay::WeightDecayConfig}, data::dataloader::DataLoaderBuilder, record::{DefaultFileRecorder, Recorder, CompactRecorder, NoStdTrainingRecorder}, module::Module, train::{LearnerBuilder, metric::{LossMetric, Adaptor, LossInput}, TrainStep, TrainOutput, ValidStep}, nn::loss::MSELoss};
+use burn::{config::Config, tensor::{backend::{ADBackend, Backend}, Tensor}, optim::{AdamConfig, decay::WeightDecayConfig}, data::dataloader::DataLoaderBuilder, record::{Recorder, CompactRecorder, NoStdTrainingRecorder, BinFileRecorder, FullPrecisionSettings}, module::Module, train::{LearnerBuilder, metric::{LossMetric, Adaptor, LossInput}, TrainStep, TrainOutput, ValidStep}, nn::loss::{MSELoss, Reduction}};
 
 use crate::{data::{CsrnetBatcher, CsrnetDataset, CsrnetBatch}, model::csrnet::{ModelRecord, Model}};
 
@@ -54,7 +54,7 @@ pub fn run<B: ADBackend<FloatElem = f32>>(config: CsrnetTrainingConfig, device: 
     // Model
     let mut model = crate::model::csrnet::Model::<B>::default();
     if let Some(model_file) = &config.model_file {
-        let record: ModelRecord<B> = DefaultFileRecorder::<burn::record::FullPrecisionSettings>::new()
+        let record: ModelRecord<B> = BinFileRecorder::<FullPrecisionSettings>::default()
                 .load(model_file.into())
                 .expect("could not load {model_file}");
         model = model.load_record(record);
@@ -97,7 +97,7 @@ pub struct CsrnetTrainingOutput<B: Backend> {
 
 impl<B: Backend> Adaptor<LossInput<B>> for CsrnetTrainingOutput<B> {
     fn adapt(&self) -> LossInput<B> {
-        LossInput::new(self.loss.clone())
+        LossInput::new(self.loss.clone().sum())
     }
 }
 
@@ -106,7 +106,7 @@ impl <B: Backend> Model<B> {
         let targets = item.labels;
         let output = self.forward(item.images);
         let loss = MSELoss::new();
-        let loss = loss.forward(output.clone(), targets.clone(), burn::nn::loss::Reduction::Mean);
+        let loss = loss.forward(output.clone(), targets.clone(), Reduction::Sum);
 
         CsrnetTrainingOutput {
             loss,

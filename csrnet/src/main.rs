@@ -1,15 +1,20 @@
-use burn::tensor::{Tensor, Shape, backend::Backend, Data};
+use burn::tensor::backend::Backend;
+use burn_autodiff::ADBackendDecorator;
 #[cfg(feature = "cpu")]
-use burn_ndarray::NdArrayBackend;
+use burn_ndarray::{NdArrayBackend, NdArrayDevice};
 #[cfg(feature = "tch")]
-use burn_tch::TchBackend;
+use burn_tch::{TchBackend, TchDevice};
 #[cfg(feature = "wgpu")]
-use burn_wgpu::{WgpuBackend, AutoGraphicsApi};
+use burn_wgpu::{WgpuBackend, WgpuDevice, AutoGraphicsApi};
 
 pub mod model;
-use image::GenericImageView;
+pub mod data;
+pub mod train;
+pub mod utils;
+
 use model::csrnet;
 use structopt::StructOpt;
+use train::CsrnetTrainingConfig;
 
 #[cfg(feature = "cpu")]
 type CCBackend = NdArrayBackend<f32>;
@@ -17,6 +22,19 @@ type CCBackend = NdArrayBackend<f32>;
 type CCBackend = WgpuBackend<AutoGraphicsApi, f32, i32>;
 #[cfg(feature = "tch")]
 type CCBackend = TchBackend<f32>;
+
+fn device() -> <CCBackend as Backend>::Device {
+    #[cfg(feature = "cpu")]
+    let dev = NdArrayDevice::default();
+    #[cfg(feature = "wgpu")]
+    let dev = WgpuDevice::default();
+    #[cfg(all(feature = "tch", target_os = "macos"))]
+    let dev = TchDevice::Mps;
+    #[cfg(all(feature = "tch", not(target_os = "macos")))]
+    let dev = TchDevice::Vulkan;
+
+    dev
+}
 
 /// The model to perform crowdcounting -- count the number of persons in the
 /// picture of a crowd.
@@ -28,47 +46,10 @@ enum Args {
         #[structopt(short, long)]
         image: String
     },
-}
-
-fn prepare_image<B: Backend>(path: &str) -> Tensor<B, 4> {
-    let im = image::open(path).expect("open image");
-    let (w, h) = im.dimensions();
-
-    let im = im.to_rgb8();
-    let w = w as usize;
-    let h = h as usize;
-    //
-    let mut data = vec![];
-
-    // la normalisation n'est pas non plus utilisee dans le papier original
-    // meme si elle est encore presente dans le code (mais pas utilisee).
-    //
-    //const MEAN_MAGIC: [f32;3] = [0.485, 0.456, 0.406];
-    //const STD_MAGIC:  [f32;3] = [0.229, 0.224, 0.225];
-    const SUB_MAGIC:  [f32;3] = [92.8207477031, 95.2757037428, 104.877445883];
-    for c in 0..3 {
-        for y in 0..h  {
-            for x in 0..w {
-                let pixel = im.get_pixel(x as u32, y as u32);
-                let pixel = f32::from(pixel[c]);
-                // la normalisation n'est pas non plus utilisee dans le papier 
-                // original meme si elle est encore presente dans le code 
-                // (mais pas utilisee).
-                //
-                //let pixel = pixel / 255.0;
-                //let pixel = (pixel - MEAN_MAGIC[c]) / STD_MAGIC[c];
-                //let pixel = pixel * 255.0;
-                let pixel = pixel - SUB_MAGIC[c];
-                data.push(pixel);
-            }
-        }
-    }
-
-    // todo subtract some value from each dim
-    let tensor = Tensor::from_floats(Data::from(data.as_slice()))
-        .reshape(Shape::from([3, h, w]));
-
-    tensor.unsqueeze()
+    /// Work in progress
+    Train {
+        path: String
+    },
 }
 
 fn main() {
@@ -76,11 +57,28 @@ fn main() {
     match &args {
         Args::Infer { image } => {
             let model = csrnet::Model::<CCBackend>::default();
-            let tensor = prepare_image::<CCBackend>(image);
+            let tensor = utils::prepare_image(image);
 
-            let output = model.forward(tensor);
+            let output = model.forward(tensor.unsqueeze());
             let output = output.sum().into_scalar();
             println!("{output:?}");
+        },
+        Args::Train { path } => {
+            let config = CsrnetTrainingConfig {
+                model_file : None, 
+                checkpoints: "./artifacts/checkpoints/".to_string(), 
+                output:  "./outputs/".to_string(), 
+                
+                train: path.clone(),
+                validation: path.clone(),
+
+                batch_size: 1,
+                num_epochs: 10,
+                num_workers: 4,
+                seed: 42,
+                ..Default::default()
+            };
+            train::run::<ADBackendDecorator<CCBackend>>(config, device());
         }
     }
 }

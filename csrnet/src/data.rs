@@ -10,14 +10,6 @@ pub struct CsrnetItem<B: Backend> {
     pub density_map: Tensor<B, 3>
 }
 
-impl <B: Backend<FloatElem = f32>> CsrnetItem<B> {
-    pub fn new(im_path: &str, h5_path: &str) -> Self {
-        let im = utils::prepare_image(im_path);
-        let ds = utils::read_density_map(h5_path);
-        Self { image: im, density_map: ds }
-    }
-}
-
 #[derive(Debug, Clone)]
 pub struct FileCsrnetDataset {
     items: Vec<(PathBuf, PathBuf)>
@@ -64,7 +56,7 @@ impl <B> Mapper<(PathBuf, PathBuf), CsrnetItem<B>> for ToCsrnetItem<B>
 where B: Backend<FloatElem = f32>
 {
     fn map(&self, item: &(PathBuf, PathBuf)) -> CsrnetItem<B> {
-        let im = utils::prepare_image(&item.0).to_device(&self.device);
+        let im = utils::prepare_image(&item.0, true).to_device(&self.device);
         let h5 = utils::read_density_map(&item.1).to_device(&self.device);
         CsrnetItem { image: im, density_map: h5 }
     }

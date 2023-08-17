@@ -1,6 +1,6 @@
-use burn::{config::Config, tensor::{backend::{ADBackend, Backend}, Tensor}, optim::{AdamConfig, decay::WeightDecayConfig}, data::dataloader::DataLoaderBuilder, record::{Recorder, CompactRecorder, NoStdTrainingRecorder, BinFileRecorder, FullPrecisionSettings}, module::Module, train::{LearnerBuilder, metric::{LossMetric, Adaptor, LossInput}, TrainStep, TrainOutput, ValidStep}, nn::loss::{MSELoss, Reduction}};
+use burn::{config::Config, tensor::{backend::{ADBackend, Backend}, Tensor}, optim::{AdamConfig, decay::WeightDecayConfig}, data::dataloader::DataLoaderBuilder, record::{Recorder, NoStdTrainingRecorder}, module::Module, train::{LearnerBuilder, metric::{LossMetric, Adaptor, LossInput}, TrainStep, TrainOutput, ValidStep}, nn::loss::{MSELoss, Reduction}};
 
-use crate::{data::{CsrnetBatcher, CsrnetDataset, CsrnetBatch}, model::csrnet::{ModelRecord, Model}};
+use crate::{data::{CsrnetBatcher, CsrnetDataset, CsrnetBatch}, model::csrnet::Model, utils::model};
 
 
 #[derive(Config, Default)]
@@ -31,6 +31,7 @@ pub struct CsrnetTrainingConfig {
 pub fn run<B: ADBackend<FloatElem = f32>>(config: CsrnetTrainingConfig, device: B::Device) {
     // Config
     let optimizer = AdamConfig::new()
+        .with_epsilon(1e-8)
         .with_weight_decay(Some(WeightDecayConfig::new(config.decay_rate)));
     B::seed(config.seed);
 
@@ -52,18 +53,12 @@ pub fn run<B: ADBackend<FloatElem = f32>>(config: CsrnetTrainingConfig, device: 
         .build(CsrnetDataset::new(device.clone(), &config.validation));
 
     // Model
-    let mut model = crate::model::csrnet::Model::<B>::default();
-    if let Some(model_file) = &config.model_file {
-        let record: ModelRecord<B> = BinFileRecorder::<FullPrecisionSettings>::default()
-                .load(model_file.into())
-                .expect("could not load {model_file}");
-        model = model.load_record(record);
-    }
+    let model = model::<B>(&config.model_file);
 
     let learner = LearnerBuilder::new(&config.checkpoints)
         .metric_train_plot(LossMetric::new())
         .metric_valid_plot(LossMetric::new())
-        .with_file_checkpointer(1, CompactRecorder::new())
+        .with_file_checkpointer(3, NoStdTrainingRecorder::new())
         .devices(vec![device])
         .num_epochs(config.num_epochs)
         .build(model, optimizer.init(), 1e-4);

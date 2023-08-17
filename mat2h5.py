@@ -4,10 +4,18 @@ import scipy.io as io
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.ndimage import gaussian_filter
-import cv2
+from math import floor
+from statistics import stdev
+
+from os import listdir
+from shutil import copyfile
+
+# Note: 
+# I have modified the original instructions to make the computations of the 
+# ground truth both faster and more accurate (no need for cv2 resize with cubic
+# interpolation -- which proves quite extensive)
 
 def gaussian_filter_density(gt):
-    #print(gt.shape)
     density = np.zeros(gt.shape, dtype=np.float32)
     gt_count = np.count_nonzero(gt)
     if gt_count == 0:
@@ -23,36 +31,47 @@ def gaussian_filter_density(gt):
     #print 'generate density...'
     for i, pt in enumerate(pts):
         pt2d = np.zeros(gt.shape, dtype=np.float32)
-        pt2d[pt[1],pt[0]] = 1.
+        pt2d[pt[1],pt[0]] += 1.
         if gt_count > 1:
-            sigma = (distances[i][1]+distances[i][2]+distances[i][3])*0.1
+            sigma = stdev([distances[i][1], distances[i][2], distances[i][3]])
         else:
             sigma = np.average(np.array(gt.shape))/2./2. #case: 1 point
-        density += gaussian_filter(pt2d, sigma, mode='constant')
-    #print 'done.'
-    ###### ADDED BY MYSELF: SHRINK SIZE #########
-    # there are 3 maxpool layers => divide size by 2^3 = 8
-    # note: this was done when creating the dataset in the original code.
-    shrink_shape = (int(density.shape[1]//8), int(density.shape[0]//8))
-    density      = cv2.resize(density, shrink_shape, interpolation = cv2.INTER_CUBIC) * 64
-    ########################################
+        density += gaussian_filter(pt2d, sigma, mode='constant') * gt[(pt[1], pt[0])]
     return density
 
 def make_hdf5(img_path, mat_path, out_path):
     mat = io.loadmat(mat_path)
     img= plt.imread(img_path)
-    k = np.zeros((img.shape[0],img.shape[1]))
+    w = img.shape[0]//8
+    h = img.shape[1]//8
+    k = np.zeros((w,h))
     gt = mat["image_info"][0,0][0,0][0]
     for i in range(0,len(gt)):
-        if int(gt[i][1])<img.shape[0] and int(gt[i][0])<img.shape[1]:
-            k[int(gt[i][1]),int(gt[i][0])]=1
+        x = int(floor(gt[i][1]/8))
+        y = int(floor(gt[i][0]/8))
+        if x<w and y<h:
+            k[x, y]+=1
     k = gaussian_filter_density(k)
     with h5py.File(out_path, 'w') as hf:
             hf['density'] = k
 
+def process_dataset(original, destination):
+    imdir    = original + "/images/"
+    matdir   = original + "/ground_truth/"
+    dimdir   = destination + "/images/"
+    dtruth   = destination + "/ground_truth/"
+    #
+    for im in listdir(imdir):
+        img_path = imdir  + im 
+        mat_path = matdir + "GT_" + im.replace(".jpg", ".mat")
+        out_path = dtruth + "GT_" + im.replace(".jpg", ".h5") 
+        copyfile(img_path, dimdir + im)
+        make_hdf5(img_path, mat_path, out_path)
+
 if __name__ == "__main__":
-    shangai  = "/Users/xgillard/Downloads/ShanghaiTech_Crowd_Counting_Dataset/part_A_final"
-    img_path = f"{shangai}/train_data/images/IMG_1.jpg"
-    mat_path = f"{shangai}/train_data/ground_truth/GT_IMG_1.mat"
-    out_path = f"{shangai}/train_data/GT_IMG_1.h5"
-    make_hdf5(img_path, mat_path, out_path)
+    #shangai_train  = "/Users/xgillard/Downloads/ShanghaiTech_Crowd_Counting_Dataset/part_A_final/train_data"
+    #local_train    = "./dataset/train"
+    #process_dataset(shangai_train, local_train)
+    shangai_train  = "/Users/xgillard/Downloads/ShanghaiTech_Crowd_Counting_Dataset/part_A_final/test_data"
+    local_train    = "./dataset/validation"
+    process_dataset(shangai_train, local_train)

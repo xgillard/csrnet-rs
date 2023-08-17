@@ -12,7 +12,6 @@ pub mod data;
 pub mod train;
 pub mod utils;
 
-use model::csrnet;
 use structopt::StructOpt;
 use train::CsrnetTrainingConfig;
 
@@ -42,48 +41,72 @@ fn device() -> <CCBackend as Backend>::Device {
 enum Args {
     /// Uses the trained model to perform inference (that is: actually count people in an image)
     Infer {
-        /// The image whose number of people should be counted.
-        #[structopt(short, long)]
-        image: String
-    },
-    /// Work in progress
-    Train {
-        /// Path to the training dataset
-        #[structopt(short, long)]
-        train: String,
         /// The model to use
         #[structopt(short, long)]
         model: Option<String>,
+        /// The image whose number of people should be counted.
+        #[structopt(short, long)]
+        image: String,
     },
+    /// Train the model
+    Train {
+        /// The model to use
+        #[structopt(short, long)]
+        model: Option<String>,
+        /// Path to the training dataset
+        #[structopt(short, long)]
+        train: String,
+        /// Path to the validation dataset
+        #[structopt(short, long)]
+        validation: String,
+        /// Minibatch size to use during training
+        #[structopt(short, long, default_value="1")]
+        batch_size: usize,
+        /// Number of epoch during with the training should be performed
+        #[structopt(short, long, default_value="10")]
+        epochs: usize,
+        /// A seed for the prng
+        #[structopt(short, long, default_value="42")]
+        seed: u64,
+    },
+    /// Check the value contained in a ground truth file
+    Check {
+        /// path to a ground truth h5 file
+        ground_truth: String,
+    }
 }
 
 fn main() {
     let args = Args::from_args();
     match &args {
-        Args::Infer { image } => {
-            let model = csrnet::Model::<CCBackend>::default();
-            let tensor = utils::prepare_image(image);
+        Args::Infer { model, image } => {
+            let model = utils::model::<CCBackend>(model);
+            let tensor = utils::prepare_image(image, true);
 
             let output = model.forward(tensor.unsqueeze());
             let output = output.sum().into_scalar();
             println!("{output:?}");
         },
-        Args::Train { train, model } => {
+        Args::Train { model, train, validation, batch_size, epochs, seed } => {
             let config = CsrnetTrainingConfig {
                 model_file : model.clone(), 
                 checkpoints: "./artifacts/checkpoints/".to_string(), 
                 output:  "./outputs/".to_string(), 
                 
                 train: train.clone(),
-                validation: train.clone(),
+                validation: validation.clone(),
 
-                batch_size: 1,
-                num_epochs: 10,
+                batch_size: *batch_size,
+                num_epochs: *epochs,
                 num_workers: 4,
-                seed: 42,
+                seed: *seed,
                 ..Default::default()
             };
             train::run::<ADBackendDecorator<CCBackend>>(config, device());
+        },
+        Args::Check { ground_truth } => {
+            let value: f32 = utils::read_density_map::<CCBackend, &String>(ground_truth).sum().into_scalar();
+            println!("{value:?}");
         }
     }
 }

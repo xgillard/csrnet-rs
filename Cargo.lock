@@ -247,10 +247,10 @@ checksum = "a3e2c3daef883ecc1b5d58c15adae93470a91d425f3532ba1695849656af3fc1"
 [[package]]
 name = "burn"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
- "burn-core 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-train 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-core 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-train 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
 ]
 
 [[package]]
@@ -265,11 +265,11 @@ dependencies = [
 [[package]]
 name = "burn-autodiff"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
- "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-tensor-testgen 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-tensor-testgen 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "derive-new",
  "spin 0.9.8",
 ]
@@ -289,7 +289,7 @@ dependencies = [
 [[package]]
 name = "burn-common"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
  "const-random",
  "rand",
@@ -311,14 +311,14 @@ dependencies = [
 [[package]]
 name = "burn-core"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
  "bincode",
- "burn-autodiff 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-dataset 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-derive 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-autodiff 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-dataset 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-derive 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "derive-new",
  "flate2",
  "half",
@@ -359,12 +359,12 @@ dependencies = [
 [[package]]
 name = "burn-dataset"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
  "csv",
  "derive-new",
  "dirs",
- "gix-tempfile",
+ "gix-tempfile 8.0.0",
  "image",
  "r2d2",
  "r2d2_sqlite",
@@ -389,7 +389,7 @@ dependencies = [
  "csv",
  "derive-new",
  "dirs",
- "gix-tempfile",
+ "gix-tempfile 7.0.2",
  "image",
  "r2d2",
  "r2d2_sqlite",
@@ -409,7 +409,7 @@ dependencies = [
 [[package]]
 name = "burn-derive"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -454,12 +454,12 @@ dependencies = [
 [[package]]
 name = "burn-ndarray"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
  "blas-src",
- "burn-autodiff 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-autodiff 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "derive-new",
  "libm",
  "matrixmultiply",
@@ -491,9 +491,9 @@ dependencies = [
 [[package]]
 name = "burn-tch"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
- "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "half",
  "libc",
  "rand",
@@ -503,9 +503,9 @@ dependencies = [
 [[package]]
 name = "burn-tensor"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
- "burn-tensor-testgen 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-tensor-testgen 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "derive-new",
  "half",
  "hashbrown 0.14.0",
@@ -535,7 +535,7 @@ dependencies = [
 [[package]]
 name = "burn-tensor-testgen"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -555,9 +555,9 @@ dependencies = [
 [[package]]
 name = "burn-train"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
- "burn-core 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-core 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "derive-new",
  "indicatif",
  "log",
@@ -565,6 +565,8 @@ dependencies = [
  "nvml-wrapper",
  "rgb",
  "serde",
+ "sysinfo",
+ "systemstat",
  "terminal_size",
  "textplots",
 ]
@@ -589,10 +591,10 @@ dependencies = [
 [[package]]
 name = "burn-wgpu"
 version = "0.9.0"
-source = "git+https://github.com/burn-rs/burn.git?rev=3264b10#3264b1007c2a381473ba3df050a7cbf90add08c3"
+source = "git+https://github.com/burn-rs/burn.git?rev=084c8bb#084c8bb4e0ef350241042de401f6c727ff3c253c"
 dependencies = [
- "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn-common 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-tensor 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "bytemuck",
  "derive-new",
  "futures-intrusive",
@@ -623,6 +625,12 @@ name = "bytes"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "89b2fd2a0dcf38d7971e2194b6b6eebab45ae01067456a7fd93d5547a61b70be"
+
+[[package]]
+name = "bytesize"
+version = "1.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a3e368af43e418a04d52505cf3dbc23dda4e3407ae2fa99fd0e4f308ce546acc"
 
 [[package]]
 name = "bzip2"
@@ -901,9 +909,9 @@ dependencies = [
 name = "csrnet"
 version = "0.1.0"
 dependencies = [
- "burn 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-autodiff 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
- "burn-ndarray 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=3264b10)",
+ "burn 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-autodiff 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
+ "burn-ndarray 0.9.0 (git+https://github.com/burn-rs/burn.git?rev=084c8bb)",
  "burn-tch",
  "burn-wgpu",
  "hdf5",
@@ -1140,6 +1148,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7360491ce676a36bf9bb3c56c1aa791658183a54d2744120f27285738d90465a"
 
 [[package]]
+name = "faster-hex"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e9042d281a5eec0f2387f8c3ea6c4514e2cf2732c90a85aaf383b761ee3b290d"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "fastrand"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1287,7 +1304,18 @@ version = "0.32.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "882695cccf38da4c3cc7ee687bdb412cf25e37932d7f8f2c306112ea712449f1"
 dependencies = [
- "gix-hash",
+ "gix-hash 0.11.4",
+ "gix-trace",
+ "libc",
+]
+
+[[package]]
+name = "gix-features"
+version = "0.33.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f77decb545f63a52852578ef5f66ecd71017ffc1983d551d5fa2328d6d9817f"
+dependencies = [
+ "gix-hash 0.12.0",
  "gix-trace",
  "libc",
 ]
@@ -1298,7 +1326,16 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4d5b6e9d34a2c61ea4a02bbca94c409ab6dbbca1348cbb67298cd7fed8758761"
 dependencies = [
- "gix-features",
+ "gix-features 0.32.1",
+]
+
+[[package]]
+name = "gix-fs"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53d5089f3338647776733a75a800a664ab046f56f21c515fa4722e395f877ef8"
+dependencies = [
+ "gix-features 0.33.0",
 ]
 
 [[package]]
@@ -1312,13 +1349,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "gix-hash"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d4796bac3aaf0c2f8bea152ca924ae3bdc5f135caefe6431116bcd67e98eab9"
+dependencies = [
+ "faster-hex",
+ "thiserror",
+]
+
+[[package]]
 name = "gix-tempfile"
 version = "7.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fa28d567848cec8fdd77d36ad4f5f78ecfaba7d78f647d4f63c8ae1a2cec7243"
 dependencies = [
  "dashmap",
- "gix-fs",
+ "gix-fs 0.4.1",
+ "libc",
+ "once_cell",
+ "parking_lot 0.12.1",
+ "signal-hook",
+ "signal-hook-registry",
+ "tempfile",
+]
+
+[[package]]
+name = "gix-tempfile"
+version = "8.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cea558d3daf3b1d0001052b12218c66c8f84788852791333b633d7eeb6999db1"
+dependencies = [
+ "dashmap",
+ "gix-fs 0.5.0",
  "libc",
  "once_cell",
  "parking_lot 0.12.1",
@@ -1933,8 +1996,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f79496a5651c8d57cd033c5add8ca7ee4e3d5f7587a4777484640d9cb60392d9"
 dependencies = [
  "fnv",
- "nom",
+ "nom 1.2.4",
 ]
+
+[[package]]
+name = "minimal-lexical"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
 name = "miniz_oxide"
@@ -1996,6 +2065,25 @@ name = "nom"
 version = "1.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a5b8c256fd9471521bcb84c3cdba98921497f1a331cbc15b8030fc63b82050ce"
+
+[[package]]
+name = "nom"
+version = "7.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a"
+dependencies = [
+ "memchr",
+ "minimal-lexical",
+]
+
+[[package]]
+name = "ntapi"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e8a3895c6391c39d7fe7ebc444a87eb2991b2a0bc718fdabd071eec617fc68e4"
+dependencies = [
+ "winapi",
+]
 
 [[package]]
 name = "num-complex"
@@ -2987,6 +3075,35 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "sysinfo"
+version = "0.29.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a8d0e9cc2273cc8d31377bdd638d72e3ac3e5607b18621062b169d02787f1bab"
+dependencies = [
+ "cfg-if",
+ "core-foundation-sys",
+ "libc",
+ "ntapi",
+ "once_cell",
+ "rayon",
+ "winapi",
+]
+
+[[package]]
+name = "systemstat"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a24aec24a9312c83999a28e3ef9db7e2afd5c64bf47725b758cdc1cafd5b0bd2"
+dependencies = [
+ "bytesize",
+ "lazy_static",
+ "libc",
+ "nom 7.1.3",
+ "time 0.3.25",
+ "winapi",
 ]
 
 [[package]]

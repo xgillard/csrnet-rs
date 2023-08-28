@@ -15,6 +15,8 @@ pub mod utils;
 use structopt::StructOpt;
 use train::CsrnetTrainingConfig;
 
+use crate::utils::create_density_image;
+
 #[cfg(feature = "cpu")]
 type CCBackend = NdArrayBackend<f32>;
 #[cfg(feature = "wgpu")]
@@ -47,6 +49,10 @@ enum Args {
         /// The image whose number of people should be counted.
         #[structopt(short, long)]
         image: String,
+        /// Generate a justification image showing the estimation of the ground
+        /// truth for the tested image.
+        #[structopt(short, long)]
+        justify: Option<String>,
     },
     /// Train the model
     Train {
@@ -79,13 +85,18 @@ enum Args {
 fn main() {
     let args = Args::from_args();
     match &args {
-        Args::Infer { model, image } => {
+        Args::Infer { model, image, justify } => {
             let model = utils::model::<CCBackend>(model);
             let tensor = utils::prepare_image(image, true);
 
             let output = model.forward(tensor.unsqueeze());
-            let output = output.sum().into_scalar();
-            println!("{output:?}");
+            let estimated_count = output.clone().sum().into_scalar();
+            println!("{estimated_count:?}");
+
+            if let Some(justify) = justify {
+                let image = create_density_image(output.squeeze(0));
+                image.save(justify).expect("could not save image");
+            }
         },
         Args::Train { model, train, validation, batch_size, epochs, seed } => {
             let config = CsrnetTrainingConfig {

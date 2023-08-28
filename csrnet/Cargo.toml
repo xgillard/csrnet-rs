@@ -6,11 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-burn          = { git = "https://github.com/burn-rs/burn.git", package = "burn",          rev="3264b10"}
-burn-autodiff = { git = "https://github.com/burn-rs/burn.git", package = "burn-autodiff", rev="3264b10"}
-burn-ndarray  = { git = "https://github.com/burn-rs/burn.git", package = "burn-ndarray",  rev="3264b10", optional = true, features = ['blas-accelerate']}
-burn-wgpu     = { git = "https://github.com/burn-rs/burn.git", package = "burn-wgpu",     rev="3264b10", optional = true}
-burn-tch      = { git = "https://github.com/burn-rs/burn.git", package = "burn-tch",      rev="3264b10", optional = true}
+burn          = { git = "https://github.com/burn-rs/burn.git", package = "burn",          rev="084c8bb"}
+burn-autodiff = { git = "https://github.com/burn-rs/burn.git", package = "burn-autodiff", rev="084c8bb"}
+burn-ndarray  = { git = "https://github.com/burn-rs/burn.git", package = "burn-ndarray",  rev="084c8bb", optional = true, features = ['blas-accelerate']}
+burn-wgpu     = { git = "https://github.com/burn-rs/burn.git", package = "burn-wgpu",     rev="084c8bb", optional = true}
+burn-tch      = { git = "https://github.com/burn-rs/burn.git", package = "burn-tch",      rev="084c8bb", optional = true}
 
 structopt     = "0.3.26"
 serde         = {version = "1.0.180", features = ["std", "derive"] }

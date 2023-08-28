@@ -2,7 +2,7 @@ use std::path::Path;
 
 use burn::{tensor::{Tensor, Shape, backend::Backend, Data}, record::{Recorder, NoStdTrainingRecorder}};
 use hdf5::File;
-use image::GenericImageView;
+use image::{GenericImageView, Pixel, GrayImage};
 
 use crate::model::csrnet::{Model, ModelRecord};
 
@@ -67,4 +67,29 @@ where B: Backend<FloatElem = f32>
     let tensor = Tensor::from_data(data);
     let tensor = tensor.reshape([1, shape[0], shape[1]]);
     tensor
+}
+
+pub fn create_density_image<B:Backend<FloatElem = f32>>(tensor: Tensor<B, 3>) -> GrayImage {
+    //println!("{:?}", tensor.shape().dims);
+    let [_, h, w] = tensor.shape().dims;
+    let w = w as u32;
+    let h = h as u32;
+    let mut img = GrayImage::new(w, h);
+    
+    let data: Vec<f32> = tensor.detach().into_data().value;
+    let mut iter = data.into_iter();
+
+    //for c in 0..3 {
+        for y in 0..h  {
+            for x in 0..w {
+                let value = iter.next().unwrap() * 255.0;
+                //let value = value * 255.0;
+                let value = value.round() as u8;
+
+                let pixel = img.get_pixel_mut(x, y);
+                pixel.channels_mut()[0] = value;
+            }
+        }
+    //}
+    img
 }

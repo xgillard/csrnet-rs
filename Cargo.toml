@@ -2,4 +2,5 @@
 members = [
     'csrnet-import',
     'csrnet',
+	'csrnet-labeling',
 ]

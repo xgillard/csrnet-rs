@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title>Label Csrnet instantes</title>
+    <style>
+        #imageContainer {
+          position: relative;
+          display: inline-block;
+          width: 95%;
+          height: 95%;
+        }
+        #mainImage {
+            cursor: crosshair;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    
+        .redDot {
+          width: 10px;
+          height: 10px;
+          background-color: red;
+          border-radius: 50%;
+          position: absolute;
+        }
+      </style>
+</head>
+<body>
+    {% if done %}
+       <h1>You are done. All images have been labeled</h1>
+    {% else %}
+
+    <script>
+        var label = {
+            img       : "{{img}}",
+            dataset   : "{{dataset}}",
+            positions : []
+        };
+    </script>
+
+    <div id="imageContainer">
+        <img id="mainImage" src="/image/{{id}}" alt="{{id}}"/>
+    </div>
+
+    <button id="submit">Make label</button>
+    
+    <script>
+        const imageContainer = document.getElementById('imageContainer');
+        const mainImage = document.getElementById('mainImage');
+
+        imageContainer.addEventListener('click', (event) => {
+          const imw = mainImage.clientWidth;
+          const imh = mainImage.clientHeight;
+
+          const posx = event.clientX - imageContainer.offsetLeft;
+          const posy = event.clientY - imageContainer.offsetTop;
+
+          const relx = posx / imw;
+          const rely = posy / imh;
+
+          const redDot = document.createElement('div');
+          redDot.className = 'redDot';
+          redDot.style.left = `${posx - 5}px`;
+          redDot.style.top  = `${posy - 5}px`;
+          imageContainer.appendChild(redDot);
+
+          label.positions.push([relx,rely]);
+        });
+
+
+        const submit = document.getElementById('submit');
+        submit.addEventListener('click', async function() {
+            const serialized = JSON.stringify(label);
+            try {
+                const response = await fetch ("http://localhost:8888/label/{{id}}", {
+                    method:    "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body:    serialized
+                });
+
+                if (response.ok) {
+                    window.location.href = "{{id + 1}}";
+                } else {
+                    console.error("Failed to send data.");
+                }
+            } catch (error) {
+                console.error("An error occurred:", error);
+            }
+        });
+      </script>
+
+      {% endif %}
+</body>
+</html>

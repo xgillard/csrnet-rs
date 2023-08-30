@@ -1,5 +1,6 @@
 /target
 /resources/PartAmodel_best.pth.tar
+/resources/UCLouvain/
 /artifacts/
 /outputs/
 /dataset/

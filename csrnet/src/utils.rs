@@ -2,7 +2,7 @@ use std::path::Path;
 
 use burn::{tensor::{Tensor, Shape, backend::Backend, Data}, record::{Recorder, NoStdTrainingRecorder}};
 use hdf5::File;
-use image::{GenericImageView, Pixel, GrayImage};
+use image::{GenericImageView, Pixel, GrayImage, DynamicImage};
 
 use crate::model::csrnet::{Model, ModelRecord};
 
@@ -18,8 +18,12 @@ pub fn model<B: Backend>(path: &Option<String>) -> Model<B> {
     }
 }
 
-pub fn prepare_image<B: Backend, P: AsRef<Path>>(path: P, normalize: bool) -> Tensor<B, 3> {
-    let im = image::open(path).expect("open image");
+pub fn resize(img: &DynamicImage) -> DynamicImage {
+    let (w, h) = img.dimensions();
+    img.resize(w / 4, h / 4, image::imageops::FilterType::Lanczos3)
+}
+
+pub fn prepare_image<B: Backend>(im: &DynamicImage, normalize: bool) -> Tensor<B, 3> {
     let (w, h) = im.dimensions();
 
     let im = im.to_rgb8();

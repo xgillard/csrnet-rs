@@ -49,6 +49,9 @@ enum Args {
         /// The image whose number of people should be counted.
         #[structopt(short, long)]
         image: String,
+        /// Should I resize the input image to make it fit the trained set ?
+        #[structopt(short, long)]
+        resize: bool,
         /// Generate a justification image showing the estimation of the ground
         /// truth for the tested image.
         #[structopt(short, long)]
@@ -85,9 +88,11 @@ enum Args {
 fn main() {
     let args = Args::from_args();
     match &args {
-        Args::Infer { model, image, justify } => {
+        Args::Infer { model, image, resize, justify } => {
             let model = utils::model::<CCBackend>(model);
-            let tensor = utils::prepare_image(image, true);
+            let image = image::open(image).expect("open image");
+            let image = if *resize { utils::resize(&image) } else {image};
+            let tensor = utils::prepare_image(&image, true);
 
             let output = model.forward(tensor.unsqueeze());
             let estimated_count = output.clone().sum().into_scalar();

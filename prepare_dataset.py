@@ -56,19 +56,22 @@ def gaussian_filter_density(gt):
     return density
 
 def make_hdf5(img_path, mat_path, out_path):
-    gt  = np.load(mat_path)
-    img = plt.imread(img_path)
-    w = img.shape[0]//8
-    h = img.shape[1]//8
-    k = np.zeros((w,h))
-    for i in range(0,len(gt)):
-        x = int(floor(gt[i][1] * w))
-        y = int(floor(gt[i][0] * h))
-        if x<w and y<h:
-            k[x, y]+=1
-    k = gaussian_filter_density(k)
-    with h5py.File(out_path, 'w') as hf:
-            hf['density'] = k
+    try:
+        gt  = np.load(mat_path)
+        img = plt.imread(img_path)
+        w = img.shape[0]//8
+        h = img.shape[1]//8
+        k = np.zeros((w,h))
+        for i in range(0,len(gt)):
+            x = int(floor(gt[i][1] * w))
+            y = int(floor(gt[i][0] * h))
+            if x<w and y<h:
+                k[x, y]+=1
+        k = gaussian_filter_density(k)
+        with h5py.File(out_path, 'w') as hf:
+                hf['density'] = k
+    except Exception as e:
+        print(f"failed to process {img_path}")
 
 def process_dataset(original, destination):
     imdir    = original + "/images/"
@@ -86,13 +89,13 @@ def process_dataset(original, destination):
         make_hdf5(img_path, mat_path, out_path)
 
 if __name__ == "__main__":
-    input  = "/Users/xgillard/Documents/REPO/csrnet-rs/resources/UCLouvain/small"
-    middle = "/Users/xgillard/Documents/REPO/csrnet-rs/resources/UCLouvain/resized"
-    output = "/Users/xgillard/Documents/REPO/csrnet-rs/resources/UCLouvain/resized-h5"
-    makedirs(f"{middle}/images")
-    makedirs(f"{middle}/ground_truth")
-    makedirs(f"{output}/images")
-    makedirs(f"{output}/ground_truth")
+    input  = "/Users/xgillard/Documents/REPO/csrnet-rs/resources/UCLouvain/a10-labeled"
+    middle = "/Users/xgillard/Documents/REPO/csrnet-rs/resources/UCLouvain/a10-labeled-resized"
+    output = "/Users/xgillard/Documents/REPO/csrnet-rs/resources/UCLouvain/a10-labeled-resized-h5"
+    makedirs(f"{middle}/images",       exist_ok = True)
+    makedirs(f"{middle}/ground_truth", exist_ok = True)
+    makedirs(f"{output}/images",       exist_ok = True)
+    makedirs(f"{output}/ground_truth", exist_ok = True)
     #
     resize_dataset(input, middle)
     process_dataset(middle, output)

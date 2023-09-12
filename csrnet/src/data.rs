@@ -56,7 +56,8 @@ impl <B> Mapper<(PathBuf, PathBuf), CsrnetItem<B>> for ToCsrnetItem<B>
 where B: Backend<FloatElem = f32>
 {
     fn map(&self, item: &(PathBuf, PathBuf)) -> CsrnetItem<B> {
-        let im = utils::prepare_image(&item.0, true).to_device(&self.device);
+        let im = image::open(&item.0).expect("open image");
+        let im = utils::prepare_image(&im, true).to_device(&self.device);
         let h5 = utils::read_density_map(&item.1).to_device(&self.device);
         CsrnetItem { image: im, density_map: h5 }
     }

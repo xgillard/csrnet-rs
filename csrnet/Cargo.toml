@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 burn          = { git = "https://github.com/burn-rs/burn.git", package = "burn",          rev="084c8bb"}
 burn-autodiff = { git = "https://github.com/burn-rs/burn.git", package = "burn-autodiff", rev="084c8bb"}
-burn-ndarray  = { git = "https://github.com/burn-rs/burn.git", package = "burn-ndarray",  rev="084c8bb", optional = true, features = ['blas-accelerate']}
+burn-ndarray  = { git = "https://github.com/burn-rs/burn.git", package = "burn-ndarray",  rev="084c8bb", optional = true}
 burn-wgpu     = { git = "https://github.com/burn-rs/burn.git", package = "burn-wgpu",     rev="084c8bb", optional = true}
 burn-tch      = { git = "https://github.com/burn-rs/burn.git", package = "burn-tch",      rev="084c8bb", optional = true}
 

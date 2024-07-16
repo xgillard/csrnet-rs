@@ -60,9 +60,9 @@ async fn root(
     State((dataset, images)): State<(String, Vec<String>)>
 ) -> Labeling {
     if id >= images.len() {
-        Labeling{id, dataset, img: String::new(), done: true}
+        Labeling{id, dataset: dataset.replace("\\", "/"), img: String::new(), done: true}
     } else {
-        Labeling{id, dataset, img: images[id].clone(), done: false}   
+        Labeling{id, dataset: dataset.replace("\\", "/"), img: images[id].replace("\\", "/"), done: false}   
     }
 }
 

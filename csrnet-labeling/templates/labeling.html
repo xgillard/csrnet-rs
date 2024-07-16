@@ -53,6 +53,11 @@
           const posx = event.clientX - imageContainer.offsetLeft;
           const posy = event.clientY - imageContainer.offsetTop;
 
+          if (posx >= imw || posy >= imh) {
+            console.log("not allowed to create a datapoint outside of the image")
+            return;
+          }
+
           const relx = posx / imw;
           const rely = posy / imh;
 

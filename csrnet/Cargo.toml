@@ -67,7 +67,7 @@ hdf5-sys      = {version = "0.8.1", features = ["static"]}
 # To use this backend, just use the `--features "tch"` flag when compiling. 
 #
 [features]
-default = ["tch"]
+default = []
 cpu     = ["dep:burn-ndarray"]
 wgpu    = ["dep:burn-wgpu"]
 tch     = ["dep:burn-tch"]
